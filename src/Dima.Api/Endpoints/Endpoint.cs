@@ -51,8 +51,12 @@ public static class Endpoint
         endpoints.MapGroup("v1/orders")
             .WithTags("Orders")
             .RequireAuthorization()
+            .MapEndpoint<GetAllOrdersEndpoint>()
+            .MapEndpoint<GetOrderByNumberEndpoint>()
             .MapEndpoint<CreateOrderEndpoint>()
-            .MapEndpoint<CancelOrderEndpoint>();
+            .MapEndpoint<CancelOrderEndpoint>()
+            .MapEndpoint<PayOrderEndpoint>()
+            .MapEndpoint<RefundOrderEndpoint>();
 
         endpoints.MapGroup("v1/identity")
             .WithTags("Identity")

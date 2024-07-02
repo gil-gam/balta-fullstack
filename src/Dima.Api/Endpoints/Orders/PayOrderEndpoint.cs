@@ -7,28 +7,26 @@ using Dima.Core.Responses;
 
 namespace Dima.Api.Endpoints.Orders;
 
-public class CancelOrderEndpoint : IEndpoint
+public class PayOrderEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app)
-        => app.MapPost("/{id}/cancel", HandleAsync)
-            .WithName("Orders: Cancel a new order")
-            .WithSummary("Cancela um pedido")
-            .WithDescription("Cancela um pedido")
-            .WithOrder(2)
+        => app.MapPost("/{id}/pay", HandleAsync)
+            .WithName("Orders: Pay an order")
+            .WithSummary("Marca um pedido como pago")
+            .WithDescription("Marca um pedido como pago")
+            .WithOrder(3)
             .Produces<Response<Order?>>();
 
     private static async Task<IResult> HandleAsync(
         IOrderHandler handler,
         long id,
+        PayOrderRequest request,
         ClaimsPrincipal user)
     {
-        var request = new CancelOrderRequest
-        {
-            Id = id,
-            UserId = user.Identity!.Name ?? string.Empty
-        };
+        request.Id = id;
+        request.UserId = user.Identity!.Name ?? string.Empty;
 
-        var result = await handler.CancelAsync(request);
+        var result = await handler.PayAsync(request);
         return result.IsSuccess
             ? TypedResults.Ok(result)
             : TypedResults.BadRequest(result);

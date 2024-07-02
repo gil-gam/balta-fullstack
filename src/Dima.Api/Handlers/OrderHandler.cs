@@ -152,7 +152,7 @@ public class OrderHandler(AppDbContext context) : IOrderHandler
         switch (order.Status)
         {
             case EOrderStatus.Canceled:
-                return new Response<Order?>(order, 400, "O está cancelado!");
+                return new Response<Order?>(order, 400, "O pedido está cancelado!");
 
             case EOrderStatus.Paid:
                 return new Response<Order?>(order, 400, "O pedido já foi pago");
@@ -234,5 +234,57 @@ public class OrderHandler(AppDbContext context) : IOrderHandler
         }
 
         return new Response<Order?>(order, 200, $"Pedido {order.Number} estornado com sucesso!");
+    }
+
+    public async Task<PagedResponse<List<Order>?>> GetAllAsync(GetAllOrdersRequest request)
+    {
+        try
+        {
+            var query = context
+                .Orders
+                .AsNoTracking()
+                .Include(x => x.Product)
+                .Include(x => x.Voucher)
+                .Where(x => x.UserId == request.UserId)
+                .OrderBy(x => x.CreatedAt);
+
+            var orders = await query
+                .Skip((request.PageNumber - 1) * request.PageSize)
+                .Take(request.PageSize)
+                .ToListAsync();
+
+            var count = await query.CountAsync();
+
+            return new PagedResponse<List<Order>?>(
+                orders,
+                count,
+                request.PageNumber,
+                request.PageSize);
+        }
+        catch
+        {
+            return new PagedResponse<List<Order>?>(null, 500, "Não foi possível consultar os pedidos");
+        }
+    }
+
+    public async Task<Response<Order?>> GetByNumberAsync(GetOrderByNumberRequest request)
+    {
+        try
+        {
+            var order = await context
+                .Orders
+                .AsNoTracking()
+                .Include(x => x.Product)
+                .Include(x => x.Voucher)
+                .FirstOrDefaultAsync(x => x.Number == request.Number && x.UserId == request.UserId);
+
+            return order is null
+                ? new Response<Order?>(null, 404, "Pedido não encontrado")
+                : new Response<Order?>(order);
+        }
+        catch
+        {
+            return new Response<Order?>(null, 500, "Não foi possível recuperar o pedido");
+        }
     }
 }
