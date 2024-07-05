@@ -9,26 +9,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.5" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.5" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.5" PrivateAssets="all" />
-        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
-        <PackageReference Include="MudBlazor" Version="6.19.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.5"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.5"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.5" PrivateAssets="all"/>
+        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0"/>
+        <PackageReference Include="MudBlazor" Version="6.19.1"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
+        <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js"/>
     </ItemGroup>
 
     <ItemGroup>
-        <_ContentIncludedByDefault Remove="wwwroot\sample-data\weather.json" />
-        <_ContentIncludedByDefault Remove="Components\Reports\ExpensesByCategoryChart.razor" />
-        <_ContentIncludedByDefault Remove="Pages\Orders\Checkout.razor" />
-        <_ContentIncludedByDefault Remove="Pages\Orders\Confirm.razor" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Dima.Core\Dima.Core.csproj" />
+        <ProjectReference Include="..\Dima.Core\Dima.Core.csproj"/>
     </ItemGroup>
 
 </Project>

@@ -20,9 +20,7 @@ builder.Services.AddScoped<CookieHandler>();
 builder.Services.AddAuthorizationCore();
 
 builder.Services.AddScoped<AuthenticationStateProvider, CookieAuthenticationStateProvider>();
-builder.Services.AddScoped(x =>
-    (ICookieAuthenticationStateProvider)x.GetRequiredService<AuthenticationStateProvider>());
-
+builder.Services.AddScoped(x => (ICookieAuthenticationStateProvider)x.GetRequiredService<AuthenticationStateProvider>());
 builder.Services.AddMudServices();
 
 builder.Services
