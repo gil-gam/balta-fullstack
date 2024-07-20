@@ -1,0 +1,43 @@
+@page "/premium"
+@inherits ProductsListPage
+
+<MudContainer Class="mt-16">
+    <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">Premium</MudText>
+    <MudText Align="Align.Center">Tenha acesso ilimitado a aplicação, incluindo transações e categorias ilimitadas.</MudText>
+    <MudGrid Class="mt-8 justify-center ">
+        @foreach (var product in Products)
+        {
+            <MudItem xs="12" sm="6" md="4">
+                <MudCard Elevation="25" Class="rounded-lg pb-4">
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h5" Align="Align.Center">@product.Title</MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <div class="d-flex justify-center">
+                            <MudText Typo="Typo.h3">@product.Price.ToString("C")</MudText>
+                        </div>
+                        <MudList Class="mx-auto mt-4" Style="width:300px;">
+                            <MudListItem Icon="@Icons.Material.Filled.Check">
+                                Transações Ilimitadas
+                            </MudListItem>
+                            <MudListItem Icon="@Icons.Material.Filled.Check">
+                                Categorias Ilimitadas
+                            </MudListItem>
+                            <MudListItem Icon="@Icons.Material.Filled.Check">
+                                Acesso completo
+                            </MudListItem>
+                        </MudList>
+                    </MudCardContent>
+                    <MudCardActions Class="d-flex justify-center">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large">
+                            COMEÇAR AGORA
+                        </MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        }
+        
+    </MudGrid>
+</MudContainer>
