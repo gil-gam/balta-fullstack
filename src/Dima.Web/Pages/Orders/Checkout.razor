@@ -1,77 +1,71 @@
-@page "/checkout"
+@page "/checkout/{product}"
 
 <MudContainer Class="mt-16" MaxWidth="MaxWidth.Medium">
     <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">Checkout</MudText>
     <MudGrid Spacing="6" Class="mt-16">
         <MudItem xs="7">
-            <MudText Typo="Typo.h5" GutterBottom="true">Billing address</MudText>
+            <MudText Typo="Typo.h5" GutterBottom="true">Pagamento</MudText>
             <MudGrid>
-                <MudItem xs="12">
-                    <MudTextField T="string" Label="Email" />
-                </MudItem>
-                <MudItem xs="12">
-                    <MudTextField T="string" Label="Mobile number" />
-                </MudItem>
-                <MudItem xs="12">
-                    <MudTextField T="string" Label="Personal number" />
-                </MudItem>
-                <MudItem xs="6">
-                    <MudTextField T="string" Label="First name" />
-                </MudItem>
-                <MudItem xs="6">
-                    <MudTextField T="string" Label="Last name" />
-                </MudItem>
-                <MudItem xs="12">
-                    <MudTextField T="string" Label="Address" />
-                </MudItem>
-                <MudItem xs="6">
-                    <MudTextField T="string" Label="Postal code" />
-                </MudItem>
-                <MudItem xs="6">
-                    <MudTextField T="string" Label="Postal Area" />
-                </MudItem>
                 <MudItem xs="12" Class="d-flex justify-center">
-                    <MudButton Variant="Variant.Filled" DisableElevation="true" Color="Color.Primary" Size="Size.Large" Class="mt-8">Continue to Payment</MudButton>
+                    <MudPaper Style="width: 100%" Class="pa-8 d-flex justify-center align-center">
+                        <MudButton Variant="Variant.Filled" DisableElevation="true" Color="Color.Primary" Size="Size.Large" Class="mt-8">
+                            PAGAR COM STRIPE
+                        </MudButton>
+                    </MudPaper>
                 </MudItem>
             </MudGrid>
         </MudItem>
         <MudItem xs="5">
-            <MudText Typo="Typo.h5" GutterBottom="true">Cart</MudText>
-            <MudPaper Class="d-flex flex-column" Style="height:100%;" Outlined="true">
-                <MudList Clickable="true">
-                    <MudListItem Icon="@Icons.Material.Filled.ContentCut">
+            <MudText Typo="Typo.h5" GutterBottom="true">Carrinho</MudText>
+            <MudPaper Class="d-flex flex-column" Outlined="true">
+                <MudList>
+                    <MudListItem Icon="@Icons.Material.Filled.Star">
                         <div class="d-flex">
-                            <MudText>Scissor - Big</MudText>
-                            <MudText Inline="true" Class="ml-auto">$5</MudText>
+                            <MudText>PRODUCT TITLE</MudText>
+                            <MudText Inline="true" Class="ml-auto">R$ 799,90</MudText>
                         </div>
                     </MudListItem>
-                    <MudListItem Icon="@Icons.Material.Filled.AirplanemodeActive">
-                        <div class="d-flex">
-                            <MudText>Model Airplane</MudText>
-                            <MudText Class="ml-auto">$20</MudText>
-                        </div>
+                    <MudDivider/>
+                    <MudListItem Icon="@Icons.Material.Filled.Discount">
+                        <MudTextField T="string" Placeholder="Cupom de Desconto"
+                                      Mask="mask"
+                                      Adornment="Adornment.End"
+                                      AdornmentIcon="@Icons.Material.Filled.FactCheck"
+                                      OnAdornmentClick="@(() => { })"/>
                     </MudListItem>
-                    <MudListItem Icon="@Icons.Material.Filled.Create">
+                    <MudListItem Icon="@Icons.Material.Filled.MoneyOff">
                         <div class="d-flex">
-                            <MudText>Plastic Glue</MudText>
+                            <MudText>Desconto</MudText>
                             <MudText Class="ml-auto">$12</MudText>
-                        </div>
-                    </MudListItem>
-                    <MudListItem Icon="@Icons.Material.Filled.ColorLens">
-                        <div class="d-flex">
-                            <MudText>Color set - Modern planes</MudText>
-                            <MudText Class="ml-auto">$16</MudText>
                         </div>
                     </MudListItem>
                 </MudList>
                 <div class="mt-auto">
-                    <MudDivider />
+                    <MudDivider/>
                     <div class="d-flex pa-4">
                         <MudText>Total:</MudText>
-                        <MudText Class="ml-auto"><b>$53</b></MudText>
+                        <MudText Class="ml-auto">
+                            <b>$53</b>
+                        </MudText>
                     </div>
                 </div>
             </MudPaper>
         </MudItem>
     </MudGrid>
 </MudContainer>
+
+@code {
+
+    public PatternMask mask = new PatternMask("####-####")
+    {
+        MaskChars = new[] { new MaskChar('#', @"[0-9a-fA-F]") },
+        Placeholder = '_',
+        CleanDelimiters = true,
+        Transformation = AllUpperCase
+    };
+
+    private static char AllUpperCase(char c) => c.ToString().ToUpperInvariant()[0];
+
+    [Parameter] public string Product { get; set; } = string.Empty;
+
+}
