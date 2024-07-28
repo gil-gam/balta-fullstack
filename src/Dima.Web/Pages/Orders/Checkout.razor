@@ -1,35 +1,27 @@
-@page "/checkout/{product}"
+@page "/checkout/{productId}"
 @inherits CheckoutPage
 
 <MudContainer Class="mt-16" MaxWidth="MaxWidth.Medium">
     <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">Checkout</MudText>
-    <MudGrid Spacing="6" Class="mt-16">
-        <MudItem xs="7">
-            <MudText Typo="Typo.h5" GutterBottom="true">Pagamento</MudText>
-            <MudGrid>
-                <MudItem xs="12" Class="d-flex justify-center">
-                    <MudPaper Style="width: 100%" Class="pa-8 d-flex justify-center align-center">
-                        <MudButton Variant="Variant.Filled" DisableElevation="true" Color="Color.Primary" Size="Size.Large" Class="mt-8">
-                            PAGAR COM STRIPE
-                        </MudButton>
-                    </MudPaper>
-                </MudItem>
-            </MudGrid>
-        </MudItem>
-        <MudItem xs="5">
-            <MudText Typo="Typo.h5" GutterBottom="true">Carrinho</MudText>
+    <MudGrid Class="mt-16" Justify="Justify.Center">
+        <MudItem xs="12" sm="12" md="10" lg="8" xl="6" xxl="5">
             <MudPaper Class="d-flex flex-column" Outlined="true">
                 <MudList>
                     <MudListItem Icon="@Icons.Material.Filled.Star">
                         <div class="d-flex">
-                            <MudText>PRODUCT TITLE</MudText>
-                            <MudText Inline="true" Class="ml-auto">R$ 799,90</MudText>
+                            <MudText>@Product?.Title</MudText>
+                            <MudText Inline="true" Class="ml-auto">
+                                @(Product?.Price.ToString("C"))
+                            </MudText>
                         </div>
                     </MudListItem>
                     <MudDivider/>
-                    <MudListItem Icon="@Icons.Material.Filled.Discount">
-                        <MudTextField T="string" Placeholder="Cupom de Desconto"
-                                      Mask="mask"
+                    <MudListItem Icon="@(Voucher is null ? Icons.Material.Filled.Discount : Icons.Material.Filled.CheckCircle)">
+                        <MudTextField T="string" 
+                                      Disabled="@(Voucher is not null)"
+                                      Placeholder="Cupom de Desconto"
+                                      @bind-Value="@VoucherCode"
+                                      Mask="Mask"
                                       Adornment="Adornment.End"
                                       AdornmentIcon="@Icons.Material.Filled.FactCheck"
                                       OnAdornmentClick="@(() => { })"/>
@@ -37,7 +29,9 @@
                     <MudListItem Icon="@Icons.Material.Filled.MoneyOff">
                         <div class="d-flex">
                             <MudText>Desconto</MudText>
-                            <MudText Class="ml-auto">$12</MudText>
+                            <MudText Class="ml-auto">
+                                @(Voucher?.Amount.ToString("C"))
+                            </MudText>
                         </div>
                     </MudListItem>
                 </MudList>
@@ -46,17 +40,23 @@
                     <div class="d-flex pa-4">
                         <MudText>Total:</MudText>
                         <MudText Class="ml-auto">
-                            <b>$53</b>
+                            <b>
+                                @(Total.ToString("C"))
+                            </b>
                         </MudText>
                     </div>
                 </div>
             </MudPaper>
+            <MudButton
+                Disabled="@(!IsValid)"
+                Variant="Variant.Filled" 
+                DisableElevation="true" 
+                Color="Color.Primary" 
+                Size="Size.Large" 
+                Class="mt-6"
+                FullWidth="true">
+                FINALIZAR PEDIDO
+            </MudButton>
         </MudItem>
     </MudGrid>
 </MudContainer>
-
-@code {
-
-    
-
-}

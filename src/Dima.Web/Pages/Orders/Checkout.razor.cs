@@ -1,4 +1,5 @@
 using Dima.Core.Handlers;
+using Dima.Core.Models;
 using Dima.Core.Requests.Orders;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -7,40 +8,124 @@ namespace Dima.Web.Pages.Orders;
 
 public class CheckoutPage : ComponentBase
 {
-    public PatternMask mask = new PatternMask("####-####")
+    #region Parameters
+
+    [Parameter] public string ProductId { get; set; }
+
+    [SupplyParameterFromQuery(Name = "voucher")]
+    public string VoucherCode { get; set; }
+
+    #endregion
+
+    #region Properties
+
+    public PatternMask Mask = new("####-####")
     {
-        MaskChars = new[] { new MaskChar('#', @"[0-9a-fA-F]") },
+        MaskChars = [new MaskChar('#', @"[0-9a-fA-F]")],
         Placeholder = '_',
         CleanDelimiters = true,
         Transformation = AllUpperCase
     };
 
-    private static char AllUpperCase(char c) => c.ToString().ToUpperInvariant()[0];
-
-    [Parameter]
-    public string Product { get; set; } = string.Empty;
-
-    #region Properties
-
     public bool IsBusy { get; set; } = false;
+    public bool IsValid { get; set; } = false;
     public CreateOrderRequest InputModel { get; set; } = new();
+    public Product? Product { get; set; }
+    public Voucher? Voucher { get; set; }
+    public decimal Total { get; set; }
 
     #endregion
 
     #region Services
 
-    // [Inject]
-    // public IOrderHandler Handler { get; set; } = null!;
+    [Inject] public IProductHandler ProductHandler { get; set; } = null!;
+    [Inject] public IVoucherHandler VoucherHandler { get; set; } = null!;
 
-    [Inject]
-    public NavigationManager NavigationManager { get; set; } = null!;
+    [Inject] public NavigationManager NavigationManager { get; set; } = null!;
 
-    [Inject]
-    public ISnackbar Snackbar { get; set; } = null!;
+    [Inject] public ISnackbar Snackbar { get; set; } = null!;
 
     #endregion
 
     #region Methods
+
+    protected override async Task OnInitializedAsync()
+    {
+        long productId;
+        try
+        {
+            productId = long.Parse(ProductId);
+            if (productId == 0)
+            {
+                Snackbar.Add("Produto inválido", Severity.Error);
+                IsValid = false;
+                return;
+            }
+        }
+        catch
+        {
+            Snackbar.Add("O código do produto está iválido", Severity.Error);
+            IsValid = false;
+            return;
+        }
+
+        try
+        {
+            var result = await ProductHandler.GetByIdAsync(new GetProductByIdRequest { Id = productId });
+            if (result.IsSuccess == false)
+            {
+                Snackbar.Add("Não foi possível obter o produto", Severity.Error);
+                IsValid = false;
+                return;
+            }
+
+            Product = result.Data;
+        }
+        catch
+        {
+            Snackbar.Add("Não foi possível obter o produto", Severity.Error);
+            IsValid = false;
+            return;
+        }
+
+        if (Product is null)
+        {
+            Snackbar.Add("Produto não encontrado", Severity.Error);
+            IsValid = false;
+            return;
+        }
+
+        if (!string.IsNullOrEmpty(VoucherCode))
+        {
+            try
+            {
+                var result = await VoucherHandler.GetByNumberAsync(
+                    new GetVoucherByNumberRequest
+                        { Number = VoucherCode.Replace("-", "") });
+                if (!result.IsSuccess)
+                {
+                    VoucherCode = string.Empty;
+                    Snackbar.Add("Não foi possível obter o voucher", Severity.Error);
+                }
+
+                if (result.Data is null)
+                {
+                    VoucherCode = string.Empty;
+                    Snackbar.Add("Voucher não encontrado", Severity.Error);
+                }
+
+                Voucher = result.Data;
+            }
+            catch
+            {
+                VoucherCode = string.Empty;
+                Snackbar.Add("Não foi possível obter o voucher", Severity.Error);
+            }
+        }
+
+        IsValid = true;
+        Total = Product.Price - (Voucher?.Amount ?? 0);
+    }
 
     public async Task OnValidSubmitAsync()
     {
@@ -66,6 +151,8 @@ public class CheckoutPage : ComponentBase
             IsBusy = false;
         }
     }
+
+    private static char AllUpperCase(char c) => c.ToString().ToUpperInvariant()[0];
 
     #endregion
 }
