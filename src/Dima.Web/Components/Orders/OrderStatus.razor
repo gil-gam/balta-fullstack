@@ -1,0 +1,24 @@
+@switch (Status)
+{
+    case EOrderStatus.Canceled: <MudText Color="Color.Error">CANCELADO</MudText>
+        break;
+        
+    case EOrderStatus.Paid: <MudText Color="Color.Success">PAGO</MudText>
+        break;
+        
+    case EOrderStatus.Refunded: <MudText Color="Color.Info">ESTORNADO</MudText>
+        break;
+        
+    case EOrderStatus.WaitingPayment: <MudText Color="Color.Warning">AGUARDANDO PAGAMENTO</MudText>
+        break;
+        
+    default: <MudText Color="Color.Info">Indefinido</MudText>
+        break;
+}
+
+@code {
+    
+    [Parameter, EditorRequired]
+    public EOrderStatus Status { get; set; }
+
+}

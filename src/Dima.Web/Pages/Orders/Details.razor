@@ -10,7 +10,12 @@
         <MudListItem Text="@Order.CreatedAt.ToString("dd/MM/yyyy")" Icon="@Icons.TwoTone.Create"/>
         <MudListItem Text="@Order.CreatedAt.ToString("dd/MM/yyyy")" Icon="@Icons.TwoTone.Update"/>
         <MudListItem Text="@Order.Total.ToString("C")" Icon="@Icons.TwoTone.PriceCheck"/>
-        <MudListItem Text="@Order.Status.ToString()" Icon="@Icons.TwoTone.Pin"/>
+        <MudListItem>
+            <OrderStatus Status="Order.Status"/>
+        </MudListItem>
+        <MudListItem>
+            <OrderAction Status="Order.Status"/>
+        </MudListItem>
     </MudList>
 }
 
