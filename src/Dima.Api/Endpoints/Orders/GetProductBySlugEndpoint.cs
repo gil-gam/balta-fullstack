@@ -6,10 +6,10 @@ using Dima.Core.Requests.Orders;
 
 namespace Dima.Api.Endpoints.Orders;
 
-public class GetProductByIdEndpoint : IEndpoint
+public class GetProductBySlugEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app)
-        => app.MapGet("/{id}", HandleAsync)
+        => app.MapGet("/{slug}", HandleAsync)
             .WithName("Products: Get By Id")
             .WithSummary("Recupera um produto")
             .WithDescription("Recupera um produto")
@@ -18,14 +18,14 @@ public class GetProductByIdEndpoint : IEndpoint
 
     private static async Task<IResult> HandleAsync(
         IProductHandler handler,
-        long id)
+        string slug)
     {
-        var request = new GetProductByIdRequest
+        var request = new GetProductBySlugRequest
         {
-            Id = id
+            Slug = slug
         };
 
-        var result = await handler.GetByIdAsync(request);
+        var result = await handler.GetBySlugAsync(request);
         return result.IsSuccess
             ? TypedResults.Ok(result)
             : TypedResults.BadRequest(result);

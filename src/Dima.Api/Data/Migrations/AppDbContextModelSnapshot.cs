@@ -214,6 +214,10 @@ namespace Dima.Api.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("MONEY");
 
+                    b.Property<string>("Slug")
+                        .HasMaxLength(80)
+                        .HasColumnType("VARCHAR");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(80)

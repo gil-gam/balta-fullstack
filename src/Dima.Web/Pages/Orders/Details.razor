@@ -1,0 +1,29 @@
+﻿@page "/pedidos/{number}"
+@inherits DetailsPage
+
+<h1>Detalhes do Pedido</h1>
+
+@if (Order is not null)
+{
+    <MudList T="string">
+        <MudListItem Text="@Order.Number" Icon="@Icons.TwoTone.Numbers"/>
+        <MudListItem Text="@Order.CreatedAt.ToString("dd/MM/yyyy")" Icon="@Icons.TwoTone.Create"/>
+        <MudListItem Text="@Order.CreatedAt.ToString("dd/MM/yyyy")" Icon="@Icons.TwoTone.Update"/>
+        <MudListItem Text="@Order.Total.ToString("C")" Icon="@Icons.TwoTone.PriceCheck"/>
+        <MudListItem Text="@Order.Status.ToString()" Icon="@Icons.TwoTone.Pin"/>
+    </MudList>
+}
+
+<br>
+<hr>
+
+<h2>Itens do Pedido</h2>
+@if (Order is not null)
+{
+    <MudList T="string">
+        <MudListItem Text="@Order.Product.Title" Icon="@Icons.TwoTone.Title"/>
+        <MudListItem Text="@Order.Product.Price.ToString("C")" Icon="@Icons.TwoTone.PriceCheck"/>
+        <MudListItem Text="@Order.Voucher?.Title" Icon="@Icons.TwoTone.Title"/>
+        <MudListItem Text="@Order.Voucher?.Amount.ToString("C")" Icon="@Icons.TwoTone.PriceChange"/>
+    </MudList>
+}

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dima.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240617202039_stripe")]
-    partial class stripe
+    [Migration("20240809132317_v4")]
+    partial class v4
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -170,6 +170,35 @@ namespace Dima.Api.Migrations
                     b.ToTable("Order", (string)null);
                 });
 
+            modelBuilder.Entity("Dima.Core.Models.Premium", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("EndedAt")
+                        .HasColumnType("DATETIME2");
+
+                    b.Property<long>("OrderId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("StartedAt")
+                        .HasColumnType("DATETIME2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("VARCHAR");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("Premium", (string)null);
+                });
+
             modelBuilder.Entity("Dima.Core.Models.Product", b =>
                 {
                     b.Property<long>("Id")
@@ -187,6 +216,10 @@ namespace Dima.Api.Migrations
 
                     b.Property<decimal>("Price")
                         .HasColumnType("MONEY");
+
+                    b.Property<string>("Slug")
+                        .HasMaxLength(80)
+                        .HasColumnType("VARCHAR");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -493,6 +526,17 @@ namespace Dima.Api.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("Voucher");
+                });
+
+            modelBuilder.Entity("Dima.Core.Models.Premium", b =>
+                {
+                    b.HasOne("Dima.Core.Models.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Dima.Core.Models.Transaction", b =>

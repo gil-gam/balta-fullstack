@@ -1,4 +1,4 @@
-@page "/checkout/{productId}"
+@page "/checkout/{productSlug}"
 @inherits CheckoutPage
 
 <MudContainer Class="mt-16" MaxWidth="MaxWidth.Medium">
@@ -17,7 +17,7 @@
                     </MudListItem>
                     <MudDivider/>
                     <MudListItem Icon="@(Voucher is null ? Icons.Material.Filled.Discount : Icons.Material.Filled.CheckCircle)">
-                        <MudTextField T="string" 
+                        <MudTextField T="string"
                                       Disabled="@(Voucher is not null)"
                                       Placeholder="Cupom de Desconto"
                                       @bind-Value="@VoucherCode"
@@ -48,11 +48,12 @@
                 </div>
             </MudPaper>
             <MudButton
+                @onclick="OnValidSubmitAsync"
                 Disabled="@(!IsValid)"
-                Variant="Variant.Filled" 
-                DisableElevation="true" 
-                Color="Color.Primary" 
-                Size="Size.Large" 
+                Variant="Variant.Filled"
+                DisableElevation="true"
+                Color="Color.Primary"
+                Size="Size.Large"
                 Class="mt-6"
                 FullWidth="true">
                 FINALIZAR PEDIDO

@@ -14,7 +14,7 @@ public class ProductHandler(IHttpClientFactory httpClientFactory) : IProductHand
         => await _client.GetFromJsonAsync<PagedResponse<List<Product>>>("v1/products")
            ?? new PagedResponse<List<Product>>(null, 400, "Não foi possível obter os produtos");
 
-    public async Task<Response<Product?>> GetByIdAsync(GetProductByIdRequest request)
-        => await _client.GetFromJsonAsync<Response<Product?>>($"v1/products/{request.Id}")
+    public async Task<Response<Product?>> GetBySlugAsync(GetProductBySlugRequest request)
+        => await _client.GetFromJsonAsync<Response<Product?>>($"v1/products/{request.Slug}")
            ?? new Response<Product?>(null, 400, "Não foi possível obter o produto");
 }

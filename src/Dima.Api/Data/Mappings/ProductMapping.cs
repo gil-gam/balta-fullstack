@@ -21,6 +21,11 @@ public class ProductMapping : IEntityTypeConfiguration<Product>
             .IsRequired(false)
             .HasColumnType("NVARCHAR")
             .HasMaxLength(255);
+        
+        builder.Property(x => x.Slug)
+            .IsRequired(false)
+            .HasColumnType("VARCHAR")
+            .HasMaxLength(80);
 
         builder.Property(x => x.Price)
             .IsRequired(true)

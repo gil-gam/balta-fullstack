@@ -20,7 +20,8 @@ builder.Services.AddScoped<CookieHandler>();
 builder.Services.AddAuthorizationCore();
 
 builder.Services.AddScoped<AuthenticationStateProvider, CookieAuthenticationStateProvider>();
-builder.Services.AddScoped(x => (ICookieAuthenticationStateProvider)x.GetRequiredService<AuthenticationStateProvider>());
+builder.Services.AddScoped(x =>
+    (ICookieAuthenticationStateProvider)x.GetRequiredService<AuthenticationStateProvider>());
 builder.Services.AddMudServices();
 
 builder.Services
@@ -33,6 +34,7 @@ builder.Services.AddTransient<ICategoryHandler, CategoryHandler>();
 builder.Services.AddTransient<IReportHandler, ReportHandler>();
 builder.Services.AddTransient<IProductHandler, ProductHandler>();
 builder.Services.AddTransient<IVoucherHandler, VoucherHandler>();
+builder.Services.AddTransient<IOrderHandler, OrderHandler>();
 
 builder.Services.AddLocalization();
 CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("pt-BR");

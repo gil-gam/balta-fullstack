@@ -41,7 +41,7 @@ public static class Endpoint
             .WithTags("Products")
             .RequireAuthorization()
             .MapEndpoint<GetAllProductsEndpoint>()
-            .MapEndpoint<GetProductByIdEndpoint>();
+            .MapEndpoint<GetProductBySlugEndpoint>();
 
         endpoints.MapGroup("v1/vouchers")
             .WithTags("Vouchers")

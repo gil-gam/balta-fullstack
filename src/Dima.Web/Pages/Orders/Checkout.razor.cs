@@ -10,10 +10,10 @@ public class CheckoutPage : ComponentBase
 {
     #region Parameters
 
-    [Parameter] public string ProductId { get; set; }
+    [Parameter] public string ProductSlug { get; set; } = string.Empty;
 
     [SupplyParameterFromQuery(Name = "voucher")]
-    public string VoucherCode { get; set; }
+    public string? VoucherCode { get; set; }
 
     #endregion
 
@@ -39,6 +39,7 @@ public class CheckoutPage : ComponentBase
     #region Services
 
     [Inject] public IProductHandler ProductHandler { get; set; } = null!;
+    [Inject] public IOrderHandler OrderHandler { get; set; } = null!;
     [Inject] public IVoucherHandler VoucherHandler { get; set; } = null!;
 
     [Inject] public NavigationManager NavigationManager { get; set; } = null!;
@@ -51,27 +52,9 @@ public class CheckoutPage : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        long productId;
         try
         {
-            productId = long.Parse(ProductId);
-            if (productId == 0)
-            {
-                Snackbar.Add("Produto inválido", Severity.Error);
-                IsValid = false;
-                return;
-            }
-        }
-        catch
-        {
-            Snackbar.Add("O código do produto está iválido", Severity.Error);
-            IsValid = false;
-            return;
-        }
-
-        try
-        {
-            var result = await ProductHandler.GetByIdAsync(new GetProductByIdRequest { Id = productId });
+            var result = await ProductHandler.GetBySlugAsync(new GetProductBySlugRequest { Slug = ProductSlug });
             if (result.IsSuccess == false)
             {
                 Snackbar.Add("Não foi possível obter o produto", Severity.Error);
@@ -133,14 +116,17 @@ public class CheckoutPage : ComponentBase
 
         try
         {
-            // var result = await Handler.CreateAsync(InputModel);
-            // if (result.IsSuccess)
-            // {
-            //     Snackbar.Add(result.Message, Severity.Success);
-            //     NavigationManager.NavigateTo("/pedidos");
-            // }
-            // else
-            //     Snackbar.Add(result.Message, Severity.Error);
+            var request = new CreateOrderRequest
+            {
+                ProductId = Product!.Id,
+                VoucherId = Voucher?.Id ?? null
+            };
+
+            var result = await OrderHandler.CreateAsync(request);
+            if (result.IsSuccess)
+                NavigationManager.NavigateTo($"/pedidos/{result.Data!.Number}");
+            else
+                Snackbar.Add(result.Message, Severity.Error);
         }
         catch (Exception ex)
         {

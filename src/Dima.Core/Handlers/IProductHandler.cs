@@ -7,5 +7,5 @@ namespace Dima.Core.Handlers;
 public interface IProductHandler
 {
     Task<PagedResponse<List<Product>>> GetAllAsync(GetAllProductsRequest request);
-    Task<Response<Product?>> GetByIdAsync(GetProductByIdRequest request);
+    Task<Response<Product?>> GetBySlugAsync(GetProductBySlugRequest request);
 }

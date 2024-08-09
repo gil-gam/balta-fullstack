@@ -38,14 +38,14 @@ public class ProductHandler(AppDbContext context) : IProductHandler
         }
     }
 
-    public async Task<Response<Product?>> GetByIdAsync(GetProductByIdRequest request)
+    public async Task<Response<Product?>> GetBySlugAsync(GetProductBySlugRequest request)
     {
         try
         {
             var product = await context
                 .Products
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.Id && x.IsActive == true);
+                .FirstOrDefaultAsync(x => x.Slug == request.Slug && x.IsActive == true);
 
             return product is null
                 ? new Response<Product?>(null, 404, "Produto não encontrado")
