@@ -2,33 +2,41 @@
 @inherits DetailsPage
 
 <h1>Detalhes do Pedido</h1>
-
-@if (Order is not null)
-{
-    <MudList T="string">
-        <MudListItem Text="@Order.Number" Icon="@Icons.TwoTone.Numbers"/>
-        <MudListItem Text="@Order.CreatedAt.ToString("dd/MM/yyyy")" Icon="@Icons.TwoTone.Create"/>
-        <MudListItem Text="@Order.CreatedAt.ToString("dd/MM/yyyy")" Icon="@Icons.TwoTone.Update"/>
-        <MudListItem Text="@Order.Total.ToString("C")" Icon="@Icons.TwoTone.PriceCheck"/>
-        <MudListItem>
-            <OrderStatus Status="Order.Status"/>
-        </MudListItem>
-        <MudListItem>
-            <OrderAction Status="Order.Status"/>
-        </MudListItem>
-    </MudList>
-}
-
 <br>
-<hr>
-
-<h2>Itens do Pedido</h2>
 @if (Order is not null)
 {
-    <MudList T="string">
-        <MudListItem Text="@Order.Product.Title" Icon="@Icons.TwoTone.Title"/>
-        <MudListItem Text="@Order.Product.Price.ToString("C")" Icon="@Icons.TwoTone.PriceCheck"/>
-        <MudListItem Text="@Order.Voucher?.Title" Icon="@Icons.TwoTone.Title"/>
-        <MudListItem Text="@Order.Voucher?.Amount.ToString("C")" Icon="@Icons.TwoTone.PriceChange"/>
-    </MudList>
+    <h4>Número do Pedido</h4>
+    <p>@Order.Number</p>
+    <br>
+    <h4>Data do Pedido</h4>
+    <p>@Order.CreatedAt.ToString("dd/MM/yyyy")</p>
+    <br>
+    <h4>Última Atualização</h4>
+    <p>@Order.UpdatedAt.ToString("dd/MM/yyyy")</p>
+    <br>
+    <h4>Produto</h4>
+    <p>@Order.Product.Title</p>
+    <br>
+    <h4>Desconto</h4>
+    <p>@(Order.Voucher is null ? "Não aplicado" : Order.Voucher.Amount.ToString("C"))</p>
+    <br>
+    <h4>Valor Total</h4>
+    <p>@Order.Total.ToString("C")</p>
+    <br>
+    <h4>Situação</h4>
+    <OrderStatus Status="Order.Status"/>
+    <br>
+    <br>
+    <br>
+    <CascadingValue Value="this">
+        <OrderAction Order="Order"/>
+    </CascadingValue>
+
+    <br>
+}
+else
+{
+    <MudSkeleton Animation="Animation.Wave"/>
+    <MudSkeleton Animation="Animation.Wave"/>
+    <MudSkeleton Animation="Animation.Wave"/>
 }

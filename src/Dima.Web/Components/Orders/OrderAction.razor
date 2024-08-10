@@ -1,22 +1,18 @@
-@switch (Status)
+@inherits OrderActionComponent
+
+@switch (Order.Status)
 {
     case EOrderStatus.Paid:
-        <MudButton FullWidth="true" Color="Color.Warning" Variant="Variant.Outlined">SOLICITAR ESTORNO</MudButton>
+        <MudButton FullWidth="true" Color="Color.Warning" Variant="Variant.Outlined" OnClick="OnRefundButtonClicked">SOLICITAR ESTORNO</MudButton>
         break;
 
     case EOrderStatus.WaitingPayment:
         <MudButton FullWidth="true" Color="Color.Success" Size="Size.Large" Variant="Variant.Filled" Class="mb-4">PAGAR COM STRIPE</MudButton>
-        <MudButton FullWidth="true" Color="Color.Error" Variant="Variant.Outlined">CANCELAR PEDIDO</MudButton>
+        <MudButton FullWidth="true" Color="Color.Error" Variant="Variant.Outlined" OnClick="OnCancelButtonClicked">CANCELAR PEDIDO</MudButton>
+
         break;
 
     default:
         <MudText></MudText>
         break;
-}
-
-@code {
-
-    [Parameter, EditorRequired]
-    public EOrderStatus Status { get; set; }
-    
 }

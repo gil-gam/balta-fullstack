@@ -1,1 +1,50 @@
 @page "/pedidos"
+
+<h1>Meus Pedidos</h1>
+
+@if (Orders is null)
+{
+    <p>
+        <em>Nenhum pedido encontrado</em>
+    </p>
+}
+else
+{
+    <MudList T="string">
+        @foreach (var order in Orders)
+        {
+            var link = $"/pedidos/{order.Number}";
+            
+            <MudListItem Href="@link" Style="cursor: pointer">
+                <strong>Número</strong>
+                @order.Number
+                <br>
+                @order.UpdatedAt.ToString("dd/MM/yyyy")
+                <OrderStatus Status="@order.Status"/>
+            </MudListItem>
+        }
+    </MudList>
+}
+
+@code {
+
+    public List<Order>? Orders { get; set; }
+
+    [Inject] public IOrderHandler Handler { get; set; } = null!;
+    [Inject] public ISnackbar Snackbar { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var request = new GetAllOrdersRequest
+        {
+            PageNumber = 1,
+            PageSize = 25
+        };
+        var result = await Handler.GetAllAsync(request);
+        if (result.IsSuccess)
+            Orders = result.Data;
+        else
+            Snackbar.Add(result.Message, Severity.Error);
+    }
+
+}

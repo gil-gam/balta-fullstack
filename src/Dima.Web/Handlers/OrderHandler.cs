@@ -10,9 +10,11 @@ public class OrderHandler(IHttpClientFactory httpClientFactory) : IOrderHandler
 {
     private readonly HttpClient _client = httpClientFactory.CreateClient(Configuration.HttpClientName);
 
-    public Task<Response<Order?>> CancelAsync(CancelOrderRequest request)
+    public async Task<Response<Order?>> CancelAsync(CancelOrderRequest request)
     {
-        throw new NotImplementedException();
+        var result = await _client.PostAsJsonAsync($"v1/orders/{request.Id}/cancel", request);
+        return await result.Content.ReadFromJsonAsync<Response<Order?>>()
+               ?? new Response<Order?>(null, 400, "Falha ao cancelar pedido");
     }
 
     public async Task<Response<Order?>> CreateAsync(CreateOrderRequest request)
@@ -22,20 +24,23 @@ public class OrderHandler(IHttpClientFactory httpClientFactory) : IOrderHandler
                ?? new Response<Order?>(null, 400, "Falha ao criar a pedido");
     }
 
-    public Task<Response<Order?>> PayAsync(PayOrderRequest request)
+    public async Task<Response<Order?>> PayAsync(PayOrderRequest request)
     {
-        throw new NotImplementedException();
+        var result = await _client.PostAsJsonAsync($"v1/orders/{request.Id}/pay", request);
+        return await result.Content.ReadFromJsonAsync<Response<Order?>>()
+               ?? new Response<Order?>(null, 400, "Falha ao pagar pedido");
     }
 
-    public Task<Response<Order?>> RefundAsync(RefundOrderRequest request)
+    public async Task<Response<Order?>> RefundAsync(RefundOrderRequest request)
     {
-        throw new NotImplementedException();
+        var result = await _client.PostAsJsonAsync($"v1/orders/{request.Id}/refund", request);
+        return await result.Content.ReadFromJsonAsync<Response<Order?>>()
+               ?? new Response<Order?>(null, 400, "Falha ao pagar pedido");
     }
 
-    public Task<PagedResponse<List<Order>?>> GetAllAsync(GetAllOrdersRequest request)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<PagedResponse<List<Order>?>> GetAllAsync(GetAllOrdersRequest request)
+        => await _client.GetFromJsonAsync<PagedResponse<List<Order>?>>("v1/orders")
+           ?? new PagedResponse<List<Order>?>(null, 400, "Não foi possível obter os pedidos");
 
     public async Task<Response<Order?>> GetByNumberAsync(GetOrderByNumberRequest request)
         => await _client.GetFromJsonAsync<Response<Order?>>($"v1/orders/{request.Number}")
