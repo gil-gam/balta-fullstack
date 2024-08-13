@@ -3,12 +3,13 @@ using Dima.Core.Enums;
 using Dima.Core.Handlers;
 using Dima.Core.Models;
 using Dima.Core.Requests.Orders;
+using Dima.Core.Requests.Stripe;
 using Dima.Core.Responses;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dima.Api.Handlers;
 
-public class OrderHandler(AppDbContext context) : IOrderHandler
+public class OrderHandler(AppDbContext context, IStripeHandler stripeHandler) : IOrderHandler
 {
     public async Task<Response<Order?>> CancelAsync(CancelOrderRequest request)
     {
@@ -165,6 +166,33 @@ public class OrderHandler(AppDbContext context) : IOrderHandler
 
             default:
                 return new Response<Order?>(order, 400, "Situação do pedido inválida");
+        }
+
+        try
+        {
+            var getTransactionByOrderNumberRequest = new GetTransactionByOrderNumberRequest
+            {
+                Number = order.Number,
+            };
+            var result = await stripeHandler.GetTransactionsByOrderNumberAsync(getTransactionByOrderNumberRequest);
+
+            if (result.IsSuccess == false)
+                return new Response<Order?>(null, 500, "Não foi possível localizar o pagamento do seu pedido!");
+
+            if (result.Data is null)
+                return new Response<Order?>(null, 500, "Não foi possível localizar o pagamento do seu pedido!");
+
+            if (result.Data.Any(item => item.Refunded))
+                return new Response<Order?>(null, 500, "Este pedido já foi estornado e não pode ser pago!");
+
+            if (!result.Data.Any(item => item.Paid))
+                return new Response<Order?>(null, 500, "Este pedido ainda não foi pago!");
+
+            request.ExternalReference = result.Data[0].Id;
+        }
+        catch
+        {
+            return new Response<Order?>(null, 500, "Não foi possível localizar o pagamento do seu pedido!");
         }
 
         order.Status = EOrderStatus.Paid;
