@@ -43,6 +43,11 @@ public partial class OrderActionComponent : ComponentBase
             await CancelOrderAsync();
     }
 
+    public async void OnPayButtonClicked()
+    {
+        await PayOrderAsync();
+    }
+
     public async void OnRefundButtonClicked()
     {
         bool? result = await DialogService.ShowMessageBox(
@@ -88,7 +93,13 @@ public partial class OrderActionComponent : ComponentBase
 
     private async Task PayOrderAsync()
     {
-        var request = new CreateSessionRequest();
+        var request = new CreateSessionRequest
+        {
+            OrderNumber = Order.Number,
+            OrderTotal = (int)(Math.Round(Order.Total, 2) * 100),
+            ProductTitle = Order.Product.Title,
+            ProductDescription = Order.Product.Description
+        };
 
         try
         {

@@ -62,7 +62,8 @@ public static class Endpoint
         endpoints.MapGroup("v1/payments/stripe")
             .WithTags("Payments - Stripe")
             .RequireAuthorization()
-            .MapEndpoint<CreateSessionEndpoint>();
+            .MapEndpoint<CreateSessionEndpoint>()
+            .MapEndpoint<GetTransactionsByOrderNumberEndpoint>();
 
         endpoints.MapGroup("v1/identity")
             .WithTags("Identity")
