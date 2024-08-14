@@ -26,7 +26,6 @@ public partial class OrderActionComponent : ComponentBase
     [Inject] private IOrderHandler OrderHandler { get; set; } = null!;
     [Inject] public IStripeHandler StripeHandler { get; set; } = null!;
     [Inject] private ISnackbar Snackbar { get; set; } = null!;
-    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
 
     #endregion
 
