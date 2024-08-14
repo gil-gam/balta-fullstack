@@ -1,4 +1,11 @@
 ﻿@page "/pedidos/{number}/confirmar"
 @inherits ConfirmOrderPaymentPage
 
-<h1>Pedido Confirmado com sucesso!</h1>
+@if (Order is null && Order?.Status == EOrderStatus.Paid)
+{
+    <h1>Pedido Confirmado com sucesso!</h1>
+}
+else
+{
+    <h1>Ops, algo deu errado!</h1>
+}
