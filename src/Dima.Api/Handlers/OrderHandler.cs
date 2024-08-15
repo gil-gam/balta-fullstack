@@ -134,16 +134,18 @@ public class OrderHandler(AppDbContext context, IStripeHandler stripeHandler) : 
 
     public async Task<Response<Order?>> PayAsync(PayOrderRequest request)
     {
+        Console.WriteLine($"Iniciando pagamento do pedido {request.OrderNumber}");
         Order? order;
         try
         {
             order = await context
                 .Orders
                 .Include(x => x.Product)
-                .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == request.UserId);
+                .Include(x => x.Voucher)
+                .FirstOrDefaultAsync(x => x.Number == request.OrderNumber && x.UserId == request.UserId);
 
             if (order is null)
-                return new Response<Order?>(null, 404, "Pedido não encontrado");
+                return new Response<Order?>(null, 404, $"Pedido {request.OrderNumber} não encontrado");
         }
         catch
         {

@@ -31,7 +31,10 @@ public partial class ConfirmOrderPaymentPage : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        var request = new PayOrderRequest();
+        var request = new PayOrderRequest
+        {
+            OrderNumber = Number
+        };
 
         var result = await OrderHandler.PayAsync(request);
         if (result.IsSuccess == false)

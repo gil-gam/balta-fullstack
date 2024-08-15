@@ -26,7 +26,7 @@ public class OrderHandler(IHttpClientFactory httpClientFactory) : IOrderHandler
 
     public async Task<Response<Order?>> PayAsync(PayOrderRequest request)
     {
-        var result = await _client.PostAsJsonAsync($"v1/orders/{request.Id}/pay", request);
+        var result = await _client.PostAsJsonAsync($"v1/orders/{request.OrderNumber}/pay", request);
         return await result.Content.ReadFromJsonAsync<Response<Order?>>()
                ?? new Response<Order?>(null, 400, "Falha ao pagar pedido");
     }

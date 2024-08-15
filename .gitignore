@@ -3,6 +3,8 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+src/Dima.Web/wwwroot/appsettings.json
+
 # dotenv files
 .env
 
