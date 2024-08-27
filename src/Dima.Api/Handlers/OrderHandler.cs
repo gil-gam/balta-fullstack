@@ -134,7 +134,6 @@ public class OrderHandler(AppDbContext context, IStripeHandler stripeHandler) : 
 
     public async Task<Response<Order?>> PayAsync(PayOrderRequest request)
     {
-        Console.WriteLine($"Iniciando pagamento do pedido {request.OrderNumber}");
         Order? order;
         try
         {
@@ -265,7 +264,7 @@ public class OrderHandler(AppDbContext context, IStripeHandler stripeHandler) : 
 
         return new Response<Order?>(order, 200, $"Pedido {order.Number} estornado com sucesso!");
     }
-    
+
     public async Task<PagedResponse<List<Order>?>> GetAllAsync(GetAllOrdersRequest request)
     {
         try
